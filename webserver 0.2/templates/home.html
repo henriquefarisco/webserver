@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Flask App Template</title>
+    <link rel="stylesheet" href="/static/css/home.css">
+</head>
+<body>
+    <h1>Welcome to Our Flask Web Application Template</h1>
+    <p>This project serves as a template for building web applications with Flask. Below you can find links to login and detailed documentation.</p>
+    <a href="/login">Login</a>
+    <section id="project-details">
+        <h2>Project Details</h2>
+        <p>This template is designed to provide a quick start for Flask web development projects. It includes:</p>
+        <ul>
+            <li>User Authentication</li>
+            <li>Database Integration</li>
+            <li>API Endpoints</li>
+            <li>Front-end Interaction</li>
+        </ul>
+    </section>
+    <section id="project-structure">
+        <h2>Project Structure</h2>
+        <p>The project is structured as follows:</p>
+        <pre>
+            ./
+            app.py
+            structure.py
+            schema.sql
+            database.py
+            structure.txt
+            uploads/
+            routes/
+                route_login.py
+                route_drive.py
+                route_users_adm.py
+                route_dashboard.py
+                __init__.py
+                route_ia.py
+            static/
+                js/
+                css/
+            servicos/
+                service_users_adm.py
+                service_drive.py
+                service_ia.py
+                __init__.py
+            templates/
+                dashboard.html
+                drive_index.html
+                inteligencia_artificial.html
+                login.html
+                alterar_senha.html
+                editar_usuario.html
+                gerenciador_usuarios.html
+                home.html
+            database/
+        </pre>
+    </section>
+    <section id="requirements">
+        <h2>Installation Requirements</h2>
+        <p>Before running the application, install the required libraries:</p>
+        <code>
+        pip install flask sqlalchemy flask-login
+        </code>
+    </section>
+    <p>For more information on how to use this template and set up your own project, please visit our <a href="https://github.com/henriquefarisco/">GitHub repository</a>.</p>
+    <script src="/static/js/home.js"></script>
+</body>
+</html>

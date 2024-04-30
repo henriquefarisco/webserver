@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários</title>
+</head>
+<body>
+    <h1>Gerenciamento de Usuários</h1>
+    <p>Adicionar, editar e remover usuários.</p>
+    <form action="/dashboard/gerenciamento" method="post">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <label for="sobrenome">Sobrenome:</label>
+        <input type="text" id="sobrenome" name="sobrenome" required>
+        <label for="login">Login:</label>
+        <input type="text" id="login" name="login" required>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+        <label for="grupo">Grupo:</label>
+        <select id="grupo" name="grupo">
+            <option value="Administrador">Administrador</option>
+            <option value="Comum">Comum</option>
+        </select>
+        <button type="submit">Salvar</button>
+    </form>
+    <h2>Lista de Usuários</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Login</th>
+                <th>Grupo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.nome }}</td>
+                <td>{{ usuario.login }}</td>
+                <td>{{ usuario.grupo }}</td>
+                <td>
+                    <a href="/dashboard/editar/{{ usuario.id }}">Editar</a> |
+                    <form action="/dashboard/suspender/{{ usuario.id }}" method="post" style="display: inline;">
+                        <button type="submit">Suspender</button>
+                    </form> |
+                    <form action="/dashboard/ativar/{{ usuario.id }}" method="post" style="display: inline;">
+                        <button type="submit">Ativar</button>
+                    </form> |
+                    <form action="/dashboard/excluir/{{ usuario.id }}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Excluir</button>
+                    </form> |
+                    <a href="/dashboard/alterar-senha/{{ usuario.id }}">Alterar Senha</a>
+                </td>                
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/dashboard">Voltar ao Dashboard</a>
+</body>
+</html>

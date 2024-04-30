@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Senha</title>
+</head>
+<body>
+    <h1>Alterar Senha do Usuário</h1>
+    <form action="/dashboard/alterar-senha/{{ user_id }}" method="post">
+        <label for="nova_senha">Nova Senha:</label>
+        <input type="password" id="nova_senha" name="nova_senha" required>
+        <button type="submit">Atualizar Senha</button>
+    </form>
+    <a href="/dashboard/gerenciamento">Voltar ao Gerenciamento de Usuários</a>
+</body>
+</html>

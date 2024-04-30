@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuário</title>
+</head>
+<body>
+    <h1>Editar Usuário</h1>
+    <form action="" method="post">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" value="{{ usuario.nome }}" required>
+
+        <label for="login">Login:</label>
+        <input type="text" id="login" name="login" value="{{ usuario.login }}" required>
+
+        <label for="grupo">Grupo:</label>
+        <select id="grupo" name="grupo">
+            <option value="Administrador" {% if usuario.grupo == 'Administrador' %}selected{% endif %}>Administrador</option>
+            <option value="Comum" {% if usuario.grupo == 'Comum' %}selected{% endif %}>Comum</option>
+        </select>
+
+        <button type="submit">Atualizar</button>
+    </form>
+    <a href="/dashboard/gerenciamento">Voltar ao Gerenciamento de Usuários</a>
+</body>
+</html>

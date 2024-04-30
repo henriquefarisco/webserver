@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Drive</title>
+</head>
+<body>
+    <h1>Drive - Caminho: /{{ current_path }}</h1>
+    <ul>
+        {% for file in files %}
+        <li>
+            {% if file.is_dir %}
+            <a href="{{ url_for('drive.drive_index', subpath=file.path) }}">{{ file.name }}</a>
+            {% else %}
+            <a href="{{ url_for('drive.uploaded_file', filename=file.path) }}">{{ file.name }}</a>
+            {% endif %}
+            <a href="{{ url_for('drive.download', path=file.path) }}">Download</a>
+            <!-- Formulário de Renomeação -->
+            <form action="{{ url_for('drive.rename', path=file.path) }}" method="post" style="display: inline;">
+                <input type="text" name="new_name" placeholder="Novo nome" required>
+                <button type="submit">Renomear</button>
+            </form>
+            <form action="{{ url_for('drive.delete', path=file.path) }}" method="post" style="display: inline;">
+                <button type="submit">Excluir</button>
+            </form>
+        </li>
+        {% else %}
+        <li>Nenhum arquivo ou diretório encontrado.</li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('drive.upload_file') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="hidden" name="path" value="{{ current_path }}">
+        <button type="submit">Upload</button>
+    </form>
+    <form action="{{ url_for('drive.create_folder') }}" method="post">
+        <input type="text" name="folder_name" placeholder="Nome da Pasta" required>
+        <input type="hidden" name="path" value="{{ current_path }}">
+        <button type="submit">Criar Pasta</button>
+    </form>
+    <form action="{{ url_for('drive.upload_folder') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="folder" webkitdirectory directory multiple>
+        <input type="hidden" name="path" value="{{ current_path }}">
+        <button type="submit">Upload Pasta</button>
+    </form>
+    
+    <a href="/dashboard">Voltar ao Dashboard</a>
+</body>
+</html>
