@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="/static/css/gerenciador_usuarios.css">
+</head>
+<body>
+    <div class="sidebar">
+    <h1>User Management</h1>
+    <p>Add, edit, and remove users.</p>
+    <form action="/dashboard/gerenciamento" method="post">
+        <label for="nome">Name:</label>
+        <input type="text" id="nome" name="nome" required>
+        <label for="sobrenome">Last Name:</label>
+        <input type="text" id="sobrenome" name="sobrenome" required>
+        <label for="login">Login:</label>
+        <input type="text" id="login" name="login" required>
+        <label for="senha">Password:</label>
+        <input type="password" id="senha" name="senha" required>
+        <label for="grupo">Group:</label>
+        <select id="grupo" name="grupo">
+            <option value="Administrador">Administrator</option>
+            <option value="Comum">Standard</option>
+        </select>
+        <button type="submit">Save</button>
+    </div>
+    </form>
+    <div class="content">
+    <h2>User List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Login</th>
+                <th>Group</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.nome }}</td>
+                <td>{{ usuario.login }}</td>
+                <td>{{ usuario.grupo }}</td>
+                <td class="{{ 'status-ativo' if usuario.ativo else 'status-inativo' }}">{{ 'Active' if usuario.ativo else 'Suspended' }}</td>
+                <td>
+                    <a href="/dashboard/editar/{{ usuario.id }}" mothod="post" style="display: inline;"><button type="submit">Edit</button></a> |
+                    
+                    <form action="/dashboard/suspender/{{ usuario.id }}" method="post" style="display: inline;">
+                        <button type="submit">Suspend</button>
+                    </form> |
+                    <form action="/dashboard/ativar/{{ usuario.id }}" method="post" style="display: inline;">
+                        <button type="submit">Activate</button>
+                    </form> |
+                    <form action="/dashboard/excluir/{{ usuario.id }}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Delete</button>
+                    </form> |
+                    <a href="/dashboard/alterar-senha/{{ usuario.id }}"><button type="submit">Change Password</button></a>
+                </td>                
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/dashboard">Return to Dashboard</a>
+</div>
+</body>
+</html>

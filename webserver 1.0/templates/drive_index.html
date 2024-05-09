@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+    .file-item {
+        display: inline-block;
+        width: 120px; /* Largura aumentada para acomodar nomes maiores */
+        margin: 10px;
+        vertical-align: top;
+        position: relative;
+        height: auto; /* Altura automática para acomodar conteúdo variável */
+    }
+        .file-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .file-name {
+        text-align: center;
+        white-space: normal; /* Permite que o texto quebre em várias linhas */
+        word-wrap: break-word; /* Quebra a palavra para evitar sobreposição */
+        overflow: hidden; /* Esconde qualquer texto que exceda o espaço alocado */
+        max-height: 60px; /* Altura máxima para o nome, ajustável conforme necessário */
+    }
+        .action-buttons {
+            display: none;
+            justify-content: center; /* Distribui espaço uniformemente entre os botões */
+            width: 100%;
+        }
+        .file-item:hover .action-buttons {
+            display: flex; /* Exibe os botões quando o mouse estiver sobre o item */
+        }
+        .btn-icon {
+            width: 24px; /* Reduzindo o tamanho do botão */
+            height: 24px; /* Reduzindo o tamanho do botão */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px; /* Reduzindo o espaçamento */
+        }
+        .btn-icon i {
+            margin: 0;
+        }
+                /* Estilo padronizado para todos os botões */
+                .btn, .btn-flat {
+            width: 100%; /* Garante que todos os botões tenham a mesma largura */
+            margin: 5px 0; /* Espaçamento uniforme */
+                }
+        .modal {
+            z-index: 1003; /* Certifique-se de que o modal está acima de outros elementos */
+        }
+    </style>
+    <title>My Drive</title>
+</head>
+<body>
+    <div class="center">
+        <nav class="nav-extended white">
+            <div class="nav-wrapper white">
+                <a href="/dashboard" class="brand-logo grey-text text-darken-1">Return to Dashboard</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s3">
+                <!-- Painel lateral para opções de arquivo -->
+                <ul class="collection with-header">
+                    <li class="collection-header"><h5>Options</h5></li>
+                    <li class="collection-item">
+                        <a href="/drive" class="waves-effect waves-light btn"><i class="material-icons left">home</i>Home</a>
+                    </li>
+                    <li class="collection-item">
+                        <form action="{{ url_for('drive.upload_file') }}" method="post" enctype="multipart/form-data">
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>File</span>
+                                    <input type="file" name="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Upload your file">
+                                </div>
+                            </div>
+                            <input type="hidden" name="path" value="{{ current_path }}">
+                            <button type="submit" class="btn waves-effect waves-light">Upload</button>
+                        </form>
+                    </li>
+                    <li class="collection-item">
+                        <form action="{{ url_for('drive.upload_folder') }}" method="post" enctype="multipart/form-data">
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Folder</span>
+                                    <input type="file" name="folder" webkitdirectory directory multiple>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Upload your folder!">
+                                </div>
+                            </div>
+                            <input type="hidden" name="path" value="{{ current_path }}">
+                            <button type="submit" class="btn waves-effect waves-light">Upload Folder</button>
+                        </form>
+                    </li>
+                    <li class="collection-item">
+                        <form action="{{ url_for('drive.create_folder') }}" method="post">
+                            <div class="input-field">
+                                <input id="folder_name" type="text" name="folder_name" required>
+                                <label for="folder_name">Enter the folder name!</label>
+                            </div>
+                            <input type="hidden" name="path" value="{{ current_path }}">
+                            <button type="submit" class="btn waves-effect waves-light">Create Folder</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="col s9">
+                <h4>Drive://{{ current_path }}</h4>
+                <div>
+                    {% for file in files %}
+                    <div class="file-item">
+                        <img src="{{ url_for('static', filename='images/' + ('folder-icon.png' if file.is_dir else 'file-icon.png')) }}" alt="Icon">
+                        <div class="file-name">
+                            <a href="{{ url_for('drive.drive_index', subpath=file.path) if file.is_dir else url_for('drive.uploaded_file', filename=file.path) }}">
+                                {{ file.name }}
+                            </a>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('drive.download', path=file.path) }}" class="btn-icon"><i class="material-icons">file_download</i></a>
+                            <a href="#renameModal{{ file.path }}" class="btn-icon modal-trigger"><i class="material-icons">edit</i></a>
+<!-- Botão Mover -->
+<a href="#moveModal{{ file.path }}" class="btn-icon modal-trigger" data-path="{{ file.path }}"><i class="material-icons">drive_file_move</i></a>
+
+<!-- Modal de Mover -->
+<div id="moveModal{{ file.path }}" class="modal">
+    <div class="modal-content">
+        <h4>Move '{{ file.name }}'</h4>
+        <p>Select the new folder:</p>
+        <ul class="collection">
+            <!-- Árvore de diretórios carregada dinamicamente -->
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, {
+        onOpenStart: function(modal, trigger) {
+            // Limpa a lista anterior
+            modal.querySelector('.collection').innerHTML = '';
+
+            // Carrega a árvore de diretórios
+            fetch('/drive/directory_tree')
+                .then(response => response.json())
+                .then(data => {
+                    const list = modal.querySelector('.collection');
+                    Object.keys(data).forEach(function(key) {
+                        const li = document.createElement('li');
+                        li.className = 'collection-item';
+                        const a = document.createElement('a');
+                        a.href = '#!';
+                        a.textContent = key;
+                        a.onclick = function() {
+                            moveFile(trigger.getAttribute('data-path'), key);
+                        };
+                        li.appendChild(a);
+                        list.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error loading directory tree:', error));
+        }
+    });
+});
+
+function moveFile(currentPath, newPath) {
+    console.log("Moving from", currentPath, "to", newPath);  // Adicione isso para depuração
+    fetch('/drive/move', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ current_path: currentPath, new_path: newPath })
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to move file');
+        }
+    })
+    .then(data => {
+        M.toast({html: data.message});
+        location.reload(); // Recarrega a página para atualizar a lista de arquivos
+    })
+    .catch(error => {
+        console.error('Failed to move file:', error);
+        M.toast({html: error.message});
+    });
+}
+
+
+</script>
+
+                            
+                            <form action="{{ url_for('drive.delete', path=file.path) }}" method="post" class="btn-icon">
+                                <button type="submit" class="btn red btn-icon"><i class="material-icons">delete</i></button>
+                            </form>
+                        </div>
+                        <div id="renameModal{{ file.path }}" class="modal">
+                            <div class="modal-content">
+                                <h4>Rename</h4>
+                                <form action="{{ url_for('drive.rename', path=file.path) }}" method="post">
+                                    <div class="input-field">
+                                        <input type="text" name="new_name" id="new_name{{ file.path }}" required>
+                                        <label for="new_name{{ file.path }}">New name</label>
+                                    </div>
+                                    <button type="submit" class="btn waves-effect waves-light">Rename</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="file-item">Empty place.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems, {
+                onOpenStart: function(modal, trigger) {
+                    var currentPath = trigger.getAttribute('data-path');
+                    fetch('/drive/directory_tree').then(response => response.json()).then(data => {
+                        const list = modal.querySelector('.collection');
+                        list.innerHTML = ''; // Limpa a lista anterior
+                        // Adiciona a pasta raiz como opção
+                        list.innerHTML += '<li class="collection-item"><a href="#!" onclick="moveFile(\'' + currentPath + '\', \'/\')">Root</a></li>';
+                        Object.keys(data).forEach(function(key) {
+                            list.innerHTML += '<li class="collection-item"><a href="#!" onclick="moveFile(\'' + currentPath + '\', \'' + key + '\')">' + key + '</a></li>';
+                        });
+                    }).catch(error => console.error('Error loading directory tree:', error));
+                }
+            });
+        });
+        
+        function moveFile(currentPath, newPath) {
+            fetch('/drive/move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ current_path: currentPath, new_path: newPath })
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error while moving file!');
+                }
+            }).then(data => {
+                M.toast({html: data.message});
+                location.reload(); // Recarrega a página para atualizar a lista de arquivos
+            }).catch(error => {
+                console.error('Error while moving file:', error);
+                M.toast({html: error.message});
+            });
+        }
+        </script>
+        
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+/* Arquivo: static/css/gerenciador_usuarios.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 40px;
+    height: flex;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #333;
+}
+
+
+label {
+    margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #3e4bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+a {
+    color: #06c;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos específicos para ações de form dentro da tabela */
+form {
+    display: inline;
+}

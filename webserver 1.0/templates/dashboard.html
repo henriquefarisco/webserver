@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Dashboard</h1>
+        <p>Welcome to the Dashboard!</p>
+        <div class="links">
+            <a href="/drive/" class="btn">Drive</a>
+            {% if grupo == 'Administrador' %}
+            <a href="/dashboard/gerenciamento" class="btn">User Management</a>
+            {% endif %}
+            <a href="/logout" class="btn">Logout</a>
+        </div>
+    </div>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
